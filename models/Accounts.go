@@ -18,11 +18,11 @@ type Token struct {
 //* struct to represent user account
 type Account struct {
 	gorm.Model
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	FirstName	string	`json:"first_name"`
-	LastName	string	`json:"last_name"`
-	Token    string `json:"token";sql:"-"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Token     string `json:"token";sql:"-"`
 }
 
 //* validate incoming user details
@@ -35,8 +35,12 @@ func (account *Account) Validate() (map[string]interface{}, bool) {
 		return u.Message(false, "Password is required"), false
 	}
 
-	if len(account.FirstName) < 2 || if len(account.LastName) < 2 {
-		return u.Message(false, "Enter your full names"), false
+	if len(account.FirstName) < 2 {
+		return u.Message(false, "Enter a valid firstname"), false
+	}
+
+	if len(account.LastName) < 2 {
+		return u.Message(false, "Enter a valid lastname"), false
 	}
 
 	//* Email must be unique
