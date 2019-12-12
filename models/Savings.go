@@ -10,7 +10,7 @@ import (
 
 type Savings struct {
 	gorm.Model
-	AccountBalance *int      `gorm:"default:100"`
+	AccountBalance *int      `gorm:"default:100"json:"account_balance"`
 	SaveAmount     int       `json:"save_amount"`
 	LastSaveDate   time.Time `json:"last_save_date"`
 	SavingsPlanId  uint      `json:"savings_plan_id"`

@@ -18,6 +18,7 @@ type Token struct {
 //* struct to represent user account
 type Account struct {
 	gorm.Model
+	AvatarUrl string `sql:"type:VARCHAR(255);not null;DEFAULT:'https://res.cloudinary.com/sajicode/image/upload/v1549973773/avatar.png'"json:"avatar_url"`
 	Email     string `json:"email"`
 	Password  string `json:"password"`
 	FirstName string `json:"first_name"`
