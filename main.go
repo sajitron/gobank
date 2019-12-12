@@ -20,11 +20,11 @@ func main() {
 
 	router.HandleFunc("/api/test", controllers.Test).Methods("GET")
 
-	// router.HandleFunc("/api/contact/new", controllers.CreateContact).Methods("POST")
+	router.HandleFunc("/api/plan", controllers.CreateSavingsPlan).Methods("POST")
 
-	// router.HandleFunc("/api/contact/{id}", controllers.GetOneContact).Methods("GET")
+	router.HandleFunc("/api/plan/{id}", controllers.GetSavingsPlan).Methods("GET")
 
-	// router.HandleFunc("/api/contacts/{user_id}", controllers.GetContactsFor).Methods("GET")
+	router.HandleFunc("/api/plan", controllers.GetAllSavingsPlans).Methods("GET")
 
 	port := os.Getenv("PORT")
 	if port == "" {

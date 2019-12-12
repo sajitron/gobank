@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+
 	u "../utils"
 	"github.com/jinzhu/gorm"
 )
@@ -49,4 +51,16 @@ func GetSavingsPlan(id uint) *SavingsPlan {
 	}
 
 	return savingsPlan
+}
+
+func GetAllSavingsPlans() []*SavingsPlan {
+	savingsPlans := make([]*SavingsPlan, 0)
+	err := GetDB().Table("savings_plans").Find(&savingsPlans).Error
+
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	return savingsPlans
 }
