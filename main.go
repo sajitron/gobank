@@ -26,6 +26,12 @@ func main() {
 
 	router.HandleFunc("/api/plan", controllers.GetAllSavingsPlans).Methods("GET")
 
+	router.HandleFunc("/api/save", controllers.CreateSaving).Methods("POST")
+
+	router.HandleFunc("/api/save/{id}", controllers.GetSaving).Methods("GET")
+
+	router.HandleFunc("/api/saves/{user_id}", controllers.GetAllSavings).Methods("GET")
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8000"

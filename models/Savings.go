@@ -12,7 +12,7 @@ type Savings struct {
 	gorm.Model
 	AccountBalance *int      `gorm:"default:100"json:"account_balance"`
 	SaveAmount     int       `json:"save_amount"`
-	LastSaveDate   time.Time `json:"last_save_date"`
+	LastSaveDate   time.Time `json:"last_save_date"gorm:"default:CURRENT_TIMESTAMP"`
 	SavingsPlanId  uint      `json:"savings_plan_id"`
 	UserId         uint      `json:"user_id"`
 }
@@ -62,7 +62,7 @@ func GetSaving(id uint) *Savings {
 
 func GetSavings(user uint) []*Savings {
 	savings := make([]*Savings, 0)
-	err := GetDB().Table("savings").Where("user_id = ?", user).Find(&savings).Error
+	err := GetDB().Table("savings").Joins("inner join savings_plans on savings_plans.id = savings.savings_plan_id").Where("user_id = ?", user).Find(&savings).Error
 
 	if err != nil {
 		fmt.Println(err)
