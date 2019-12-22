@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"./app"
-	"./controllers"
+	"github.com/sajicode/app"
+	"github.com/sajicode/controllers"
 	"github.com/gorilla/mux"
 )
 

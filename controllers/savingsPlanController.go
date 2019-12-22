@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"../models"
-	u "../utils"
+	"github.com/sajicode/models"
+	u "github.com/sajicode/utils"
 	"github.com/gorilla/mux"
 )
 

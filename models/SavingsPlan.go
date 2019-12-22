@@ -3,7 +3,7 @@ package models
 import (
 	"fmt"
 
-	u "../utils"
+	u "github.com/sajicode/utils"
 	"github.com/jinzhu/gorm"
 )
 

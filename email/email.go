@@ -3,6 +3,7 @@ package email
 import (
 	"bytes"
 	"os"
+	"fmt"
 	"github.com/joho/godotenv"
 	"net/smtp"
 	"strconv"
@@ -40,7 +41,7 @@ func init() {
 
 }
 
-func mailer(receipients []string) {
+func Mailer(recipients []string) {
 	emailUsername := os.Getenv("email_user")
 	emailPassword := os.Getenv("email_password")
 	emailServer := os.Getenv("email_server")
@@ -48,7 +49,7 @@ func mailer(receipients []string) {
 
 	message := &EmailMessage{
 		From:    "sajioloye@gmail.com",
-		To:      receipients,
+		To:      recipients,
 		Subject: "Sign up successful",
 		Body:    "Welcome to the Go Bank. Let's grow together.",
 	}

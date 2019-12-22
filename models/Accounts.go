@@ -4,7 +4,8 @@ import (
 	"os"
 	"strings"
 
-	u "../utils"
+	u "github.com/sajicode/utils"
+	"github.com/sajicode/email"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
@@ -23,6 +24,7 @@ type Account struct {
 	Password  string `json:"password"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
+	Role			string `sql:"type:VARCHAR(25);DEFAULT:'customer'"json:"role"`
 	Token     string `json:"token";sql:"-"`
 }
 
@@ -84,6 +86,8 @@ func (account *Account) Create() map[string]interface{} {
 
 	response := u.Message(true, "Account has been created")
 	response["account"] = account
+
+	email.Mailer([]string{account.Email})
 
 	return response
 }
