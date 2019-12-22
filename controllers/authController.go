@@ -16,7 +16,13 @@ var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := account.Create()
+	resp, error := account.Create()
+	if error == true {
+		w.WriteHeader(http.StatusBadRequest)
+		u.Respond(w, resp)
+		return
+	}
+
 	u.Respond(w, resp)
 }
 
@@ -28,7 +34,12 @@ var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := models.Login(account.Email, account.Password)
+	resp, error := models.Login(account.Email, account.Password)
+		if error == true {
+		w.WriteHeader(http.StatusForbidden)
+		u.Respond(w, resp)
+		return
+	}
 	u.Respond(w, resp)
 }
 

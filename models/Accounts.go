@@ -4,10 +4,10 @@ import (
 	"os"
 	"strings"
 
-	u "github.com/sajicode/utils"
-	"github.com/sajicode/email"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
+	"github.com/sajicode/email"
+	u "github.com/sajicode/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -24,7 +24,7 @@ type Account struct {
 	Password  string `json:"password"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
-	Role			string `sql:"type:VARCHAR(25);DEFAULT:'customer'"json:"role"`
+	Role      string `sql:"type:VARCHAR(25);DEFAULT:'customer'"json:"role"`
 	Token     string `json:"token";sql:"-"`
 }
 
@@ -62,9 +62,10 @@ func (account *Account) Validate() (map[string]interface{}, bool) {
 	return u.Message(false, "Requirement passed"), true
 }
 
-func (account *Account) Create() map[string]interface{} {
+func (account *Account) Create() (map[string]interface{}, bool) {
 	if resp, ok := account.Validate(); !ok {
-		return resp
+		//* return true if there is an error & false if none
+		return resp, true
 	}
 
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(account.Password), bcrypt.DefaultCost)
@@ -73,7 +74,7 @@ func (account *Account) Create() map[string]interface{} {
 	GetDB().Create(account)
 
 	if account.ID <= 0 {
-		return u.Message(false, "Failed to create account, connection error.")
+		return u.Message(false, "Failed to create account, connection error."), true
 	}
 
 	//* create new JWT token for newly registered account
@@ -89,24 +90,24 @@ func (account *Account) Create() map[string]interface{} {
 
 	email.Mailer([]string{account.Email})
 
-	return response
+	return response, false
 }
 
-func Login(email, password string) map[string]interface{} {
+func Login(email, password string) (map[string]interface{}, bool) {
 	account := &Account{}
 	err := GetDB().Table("accounts").Where("email = ?", email).First(account).Error
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return u.Message(false, "Email address not found")
+			return u.Message(false, "Email address not found"), true
 		}
-		return u.Message(false, "Connection error. Please retry")
+		return u.Message(false, "Connection error. Please retry"), true
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(account.Password), []byte(password))
 
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
-		return u.Message(false, "Invalid login credentials. Please try again")
+		return u.Message(false, "Invalid login credentials. Please try again"), true
 	}
 
 	//* worked! logged in
@@ -120,7 +121,7 @@ func Login(email, password string) map[string]interface{} {
 
 	resp := u.Message(true, "Logged In")
 	resp["account"] = account
-	return resp
+	return resp, false
 }
 
 func GetUser(u uint) *Account {
