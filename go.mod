@@ -18,7 +18,14 @@ require github.com/sajicode/models v0.0.0
 
 replace github.com/sajicode/models => ./models
 
-require github.com/sajicode/utils v0.0.0
+require github.com/sajicode/logger v0.0.0
+
+replace github.com/sajicode/logger => ./logger
+
+require (
+	github.com/sajicode/utils v0.0.0
+	github.com/sirupsen/logrus v1.2.0
+)
 
 replace github.com/sajicode/utils => ./utils
 

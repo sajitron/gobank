@@ -6,7 +6,11 @@ import (
 
 	"github.com/sajicode/models"
 	u "github.com/sajicode/utils"
+	"github.com/sajicode/logger"
 )
+
+//* logger 
+var standardLogger = logger.NewLogger()
 
 var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 	account := &models.Account{}
@@ -18,6 +22,7 @@ var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 
 	resp, error := account.Create()
 	if error == true {
+		standardLogger.InvalidRequest("Invalid Request Body to create Account")
 		w.WriteHeader(http.StatusBadRequest)
 		u.Respond(w, resp)
 		return
@@ -36,6 +41,7 @@ var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 
 	resp, error := models.Login(account.Email, account.Password)
 		if error == true {
+			standardLogger.InvalidRequest("Invalid Request Body to login user")
 		w.WriteHeader(http.StatusForbidden)
 		u.Respond(w, resp)
 		return
