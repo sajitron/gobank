@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/sajicode/models"
-	u "github.com/sajicode/utils"
+	"github.com/sajicode/gobank/models"
+	u "github.com/sajicode/gobank/utils"
 	"github.com/gorilla/mux"
 )
 

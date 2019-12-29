@@ -6,8 +6,8 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
-	"github.com/sajicode/email"
-	u "github.com/sajicode/utils"
+	"github.com/sajicode/gobank/email"
+	u "github.com/sajicode/gobank/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 

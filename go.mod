@@ -1,32 +1,13 @@
 module github.com/sajicode/gobank
 
-require github.com/gorilla/mux v1.7.3
-
-require github.com/sajicode/app v0.0.0
-
-replace github.com/sajicode/app => ./app
-
-require github.com/sajicode/controllers v0.0.0
-
-replace github.com/sajicode/controllers => ./controllers
-
-require github.com/sajicode/email v0.0.0
-
-replace github.com/sajicode/email => ./email
-
-require github.com/sajicode/models v0.0.0
-
-replace github.com/sajicode/models => ./models
-
-require github.com/sajicode/logger v0.0.0
-
-replace github.com/sajicode/logger => ./logger
-
 require (
-	github.com/sajicode/utils v0.0.0
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/gorilla/mux v1.7.3
+	github.com/jinzhu/gorm v1.9.11
+	github.com/joho/godotenv v1.3.0
+	github.com/lib/pq v1.3.0
 	github.com/sirupsen/logrus v1.2.0
+	golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c
 )
-
-replace github.com/sajicode/utils => ./utils
 
 go 1.13

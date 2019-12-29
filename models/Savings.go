@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
-	u "github.com/sajicode/utils"
+	u "github.com/sajicode/gobank/utils"
 )
 
 type Savings struct {

@@ -8,8 +8,8 @@ import (
 
 	"github.com/gorilla/mux"
 	// "github.com/sajicode/logger"
-	"github.com/sajicode/models"
-	u "github.com/sajicode/utils"
+	"github.com/sajicode/gobank/models"
+	u "github.com/sajicode/gobank/utils"
 )
 
 //* logger

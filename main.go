@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/sajicode/app"
-	"github.com/sajicode/controllers"
+	"github.com/sajicode/gobank/app"
+	"github.com/sajicode/gobank/controllers"
 )
 
 func main() {
