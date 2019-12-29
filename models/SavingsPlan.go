@@ -3,8 +3,8 @@ package models
 import (
 	"fmt"
 
-	u "github.com/sajicode/utils"
 	"github.com/jinzhu/gorm"
+	u "github.com/sajicode/utils"
 )
 
 type SavingsPlan struct {
@@ -19,27 +19,27 @@ func (savingsPlan *SavingsPlan) Validate() (map[string]interface{}, bool) {
 		return u.Message(false, "Savings Plan name must be on the payload"), false
 	}
 
-	if savingsPlan.DuePeriod < 0 {
+	if savingsPlan.DuePeriod <= 0 {
 		return u.Message(false, "Due Period must be on the payload"), false
 	}
 
-	if savingsPlan.SaveRate < 0 {
+	if savingsPlan.SaveRate <= 0 {
 		return u.Message(false, "Savings rate must be on the payload"), false
 	}
 
 	return u.Message(true, "success"), true
 }
 
-func (savingsPlan *SavingsPlan) Create() map[string]interface{} {
+func (savingsPlan *SavingsPlan) Create() (map[string]interface{}, bool) {
 	if resp, ok := savingsPlan.Validate(); !ok {
-		return resp
+		return resp, true
 	}
 
 	GetDB().Create(savingsPlan)
 
 	resp := u.Message(true, "success")
 	resp["savings_plan"] = savingsPlan
-	return resp
+	return resp, false
 }
 
 func GetSavingsPlan(id uint) *SavingsPlan {

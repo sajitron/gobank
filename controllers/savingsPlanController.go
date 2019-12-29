@@ -19,7 +19,15 @@ var CreateSavingsPlan = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := savingsPlan.Create()
+	resp, error := savingsPlan.Create()
+
+	if error == true {
+		standardLogger.InvalidRequest("Invalid Request Body to create Savings Plan")
+		w.WriteHeader(http.StatusBadRequest)
+		u.Respond(w, resp)
+		return
+	}
+	
 	u.Respond(w, resp)
 }
 

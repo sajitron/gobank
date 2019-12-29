@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	u "github.com/sajicode/utils"
 	"github.com/jinzhu/gorm"
+	u "github.com/sajicode/utils"
 )
 
 type Savings struct {
@@ -37,16 +37,16 @@ func (savings *Savings) Validate() (map[string]interface{}, bool) {
 	return u.Message(true, "success"), true
 }
 
-func (savings *Savings) Create() map[string]interface{} {
+func (savings *Savings) Create() (map[string]interface{}, bool) {
 	if resp, ok := savings.Validate(); !ok {
-		return resp
+		return resp, true
 	}
 
 	GetDB().Create(savings)
 
 	resp := u.Message(true, "success")
 	resp["savings"] = savings
-	return resp
+	return resp, false
 }
 
 func GetSaving(id uint) *Savings {

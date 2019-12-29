@@ -21,7 +21,15 @@ var CreateSaving = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := savings.Create()
+	resp, error := savings.Create()
+
+	if error == true {
+		standardLogger.InvalidRequest("Invalid Request Body to Save")
+		w.WriteHeader(http.StatusBadRequest)
+		u.Respond(w, resp)
+		return
+	}
+
 	u.Respond(w, resp)
 }
 

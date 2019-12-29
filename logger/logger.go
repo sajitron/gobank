@@ -66,5 +66,5 @@ func (l *MainLogger) MissingArg(argumentName string) {
 
 //* Standard "InvalidRequest error message"
 func (l *MainLogger) InvalidRequest(argumentName string) {
-	l.Errorf(invalidArgMessage.message, argumentName)
+	l.Errorf(invalidRequestMessage.message, argumentName)
 }
