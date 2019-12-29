@@ -10,7 +10,7 @@ import (
 
 type Savings struct {
 	gorm.Model
-	AccountBalance *int      `gorm:"default:100"json:"account_balance"`
+	AccountBalance int       `gorm:"default:100"json:"account_balance"`
 	SaveAmount     int       `json:"save_amount"`
 	LastSaveDate   time.Time `json:"last_save_date"gorm:"default:CURRENT_TIMESTAMP"`
 	SavingsPlanId  uint      `json:"savings_plan_id"`
@@ -20,10 +20,6 @@ type Savings struct {
 func (savings *Savings) Validate() (map[string]interface{}, bool) {
 	if savings.SaveAmount <= 0 {
 		return u.Message(false, "Save Amount must be on the payload"), false
-	}
-
-	if savings.LastSaveDate.IsZero() {
-		return u.Message(false, "Last save date must be on the payload"), false
 	}
 
 	if savings.UserId <= 0 {
@@ -70,4 +66,26 @@ func GetSavings(user uint) []*Savings {
 	}
 
 	return savings
+}
+
+func (savings *Savings) TopUpSave(savingsId uint) (map[string]interface{}, bool) {
+
+	if resp, ok := savings.Validate(); !ok {
+		return resp, true
+	}
+
+	err := GetDB().Table("savings").Where("id = ?", savingsId).Updates(Savings{SaveAmount: savings.SaveAmount, AccountBalance: savings.AccountBalance + savings.SaveAmount, LastSaveDate: time.Now()}).Error
+
+	if err != nil {
+		fmt.Println(err)
+		//* add logger
+		resp := u.Message(false, "Database Error")
+		return resp, true
+
+	}
+
+	resp := u.Message(true, "success")
+	resp["savings"] = savings
+	return resp, false
+
 }

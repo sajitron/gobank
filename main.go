@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gorilla/mux"
 	"github.com/sajicode/app"
 	"github.com/sajicode/controllers"
-	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -27,6 +27,8 @@ func main() {
 	router.HandleFunc("/api/plan", controllers.GetAllSavingsPlans).Methods("GET")
 
 	router.HandleFunc("/api/save", controllers.CreateSaving).Methods("POST")
+
+	router.HandleFunc("/api/topup/{savings_id}", controllers.TopUpSavings).Methods("PUT")
 
 	router.HandleFunc("/api/save/{id}", controllers.GetSaving).Methods("GET")
 
