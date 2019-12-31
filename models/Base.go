@@ -3,11 +3,13 @@ package models
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	// _ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	uuid "github.com/satori/go.uuid"
 )
 
 var db *gorm.DB
@@ -32,6 +34,20 @@ func init() {
 	}
 
 	db.Debug().AutoMigrate(&Account{}, &SavingsPlan{}, &Savings{}) //* db migration
+}
+
+//* Base contains common columns for all tables
+type Base struct {
+	ID        string     `gorm:"type:uuid;primary_key;column:id"json:"id"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at" sql:"index"`
+}
+
+//* BeforeCreate will set up a UUID rather than numeric ID
+func (base *Base) BeforeCreate(scope *gorm.Scope) error {
+	scope.SetColumn("ID", uuid.NewV4().String())
+	return nil
 }
 
 //* return a handle to the DB object

@@ -3,12 +3,11 @@ package models
 import (
 	"fmt"
 
-	"github.com/jinzhu/gorm"
 	u "github.com/sajicode/gobank/utils"
 )
 
 type SavingsPlan struct {
-	gorm.Model
+	Base
 	Name      string `json:"name"`
 	DuePeriod int    `json:"due_period"`
 	SaveRate  int    `json:"save_rate"`
@@ -42,7 +41,7 @@ func (savingsPlan *SavingsPlan) Create() (map[string]interface{}, bool) {
 	return resp, false
 }
 
-func GetSavingsPlan(id uint) *SavingsPlan {
+func GetSavingsPlan(id int) *SavingsPlan {
 	savingsPlan := &SavingsPlan{}
 	err := GetDB().Table("savings_plans").Where("id = ?", id).First(savingsPlan).Error
 

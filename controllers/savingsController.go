@@ -39,13 +39,8 @@ var CreateSaving = func(w http.ResponseWriter, r *http.Request) {
 
 var GetSaving = func(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["id"])
-
-	if err != nil {
-		u.Respond(w, u.Message(false, "Request error"))
-		return
-	}
-	data := models.GetSaving(uint(id))
+	id := params["id"]
+	data := models.GetSaving(id)
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)
@@ -60,7 +55,7 @@ var GetAllSavings = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := models.GetSavings(uint(id))
+	data := models.GetSavings(id)
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)

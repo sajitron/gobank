@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/sajicode/gobank/models"
 	u "github.com/sajicode/gobank/utils"
-	"github.com/gorilla/mux"
 )
 
 var CreateSavingsPlan = func(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +27,7 @@ var CreateSavingsPlan = func(w http.ResponseWriter, r *http.Request) {
 		u.Respond(w, resp)
 		return
 	}
-	
+
 	u.Respond(w, resp)
 }
 
@@ -39,7 +39,7 @@ var GetSavingsPlan = func(w http.ResponseWriter, r *http.Request) {
 		u.Respond(w, u.Message(false, "Request error"))
 		return
 	}
-	data := models.GetSavingsPlan(uint(id))
+	data := models.GetSavingsPlan(id)
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)

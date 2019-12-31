@@ -12,13 +12,13 @@ import (
 )
 
 type Token struct {
-	UserId uint
+	UserId string
 	jwt.StandardClaims
 }
 
 //* struct to represent user account
 type Account struct {
-	gorm.Model
+	Base
 	AvatarUrl string `sql:"type:VARCHAR(255);not null;DEFAULT:'https://res.cloudinary.com/sajicode/image/upload/v1549973773/avatar.png'"json:"avatar_url"`
 	Email     string `json:"email"`
 	Password  string `json:"password"`
@@ -73,7 +73,7 @@ func (account *Account) Create() (map[string]interface{}, bool) {
 
 	GetDB().Create(account)
 
-	if account.ID <= 0 {
+	if account.ID == "" {
 		return u.Message(false, "Failed to create account, connection error."), true
 	}
 
