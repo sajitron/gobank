@@ -2,27 +2,22 @@ package models
 
 import (
 	"fmt"
-	"time"
 
+	"github.com/jinzhu/gorm"
 	u "github.com/sajicode/gobank/utils"
 )
 
 type Savings struct {
 	Base
-	AccountBalance int       `gorm:"default:100"json:"account_balance"`
-	SaveAmount     int       `json:"save_amount"`
-	LastSaveDate   time.Time `json:"last_save_date"gorm:"default:CURRENT_TIMESTAMP"`
-	SavingsPlanId  string    `json:"savings_plan_id"`
-	UserId         string    `json:"user_id"`
+	AccountBalance int    `gorm:"default:100"json:"account_balance"`
+	SavingsPlanId  string `json:"savings_plan_id"`
+	AccountId      string `json:"account_id"`
 }
 
 func (savings *Savings) Validate() (map[string]interface{}, bool) {
-	if savings.SaveAmount <= 0 {
-		return u.Message(false, "Save Amount must be on the payload"), false
-	}
 
-	if savings.UserId == "" {
-		return u.Message(false, "User is not recognized"), false
+	if savings.AccountId == "" {
+		return u.Message(false, "Account is not recognized"), false
 	}
 
 	if savings.SavingsPlanId == "" {
@@ -58,9 +53,9 @@ func GetSaving(id string) *Savings {
 	return savings
 }
 
-func GetSavings(user int) []*Savings {
+func GetSavings(account string) []*Savings {
 	savings := make([]*Savings, 0)
-	err := GetDB().Table("savings").Joins("inner join savings_plans on savings_plans.id = savings.savings_plan_id").Where("user_id = ?", user).Find(&savings).Error
+	err := GetDB().Table("savings").Joins("inner join savings_plans on savings_plans.id = savings.savings_plan_id").Where("account_id = ?", account).Find(&savings).Error
 
 	if err != nil {
 		fmt.Println(err)
@@ -70,20 +65,37 @@ func GetSavings(user int) []*Savings {
 	return savings
 }
 
-func (savings *Savings) TopUpSave(savingsId uint) (map[string]interface{}, bool) {
+func (savings *Savings) TopUpSave(savings_id string, amount int) (map[string]interface{}, bool) {
 
 	if resp, ok := savings.Validate(); !ok {
 		return resp, true
 	}
 
-	err := GetDB().Table("savings").Where("id = ?", savingsId).Updates(Savings{SaveAmount: savings.SaveAmount, AccountBalance: savings.AccountBalance + savings.SaveAmount, LastSaveDate: time.Now()}).Error
+	//* create transaction
+	transaction := Transaction{
+		SavingsId: savings_id,
+		Amount:    amount,
+	}
+	err := GetDB().Create(transaction)
 
 	if err != nil {
 		fmt.Println(err)
 		//* add logger
 		resp := u.Message(false, "Database Error")
 		return resp, true
+	}
 
+	//* update savings balance
+
+	GetDB().Table("savings").Update("account_balance", gorm.Expr("account_balance + ?", amount)).Where("id = ?", savings_id)
+
+	// err = GetDB().Table("savings").Where("id = ?", savings_id).Updates(Savings{AccountBalance: gorm.Expr("account_balance + ?", amount)}).Error
+
+	if err != nil {
+		fmt.Println(err)
+		//* add logger
+		resp := u.Message(false, "Database Error")
+		return resp, true
 	}
 
 	resp := u.Message(true, "success")
