@@ -2,9 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 	// "github.com/sajicode/logger"
@@ -48,12 +46,7 @@ var GetSaving = func(w http.ResponseWriter, r *http.Request) {
 
 var GetAllSavings = func(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["user_id"])
-
-	if err != nil {
-		u.Respond(w, u.Message(false, "Request Error"))
-		return
-	}
+	id := params["user_id"]
 
 	data := models.GetSavings(id)
 	resp := u.Message(true, "success")
@@ -61,33 +54,28 @@ var GetAllSavings = func(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
-var TopUpSavings = func(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["savings_id"])
+// var TopUpSavings = func(w http.ResponseWriter, r *http.Request) {
+// 	params := mux.Vars(r)
+// 	id := params["savings_id"]
 
-	if err != nil {
-		u.Respond(w, u.Message(false, "Request error"))
-		return
-	}
+// 	savings := &models.Savings{}
 
-	savings := &models.Savings{}
+// 	err := json.NewDecoder(r.Body).Decode(savings)
 
-	err = json.NewDecoder(r.Body).Decode(savings)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		u.Respond(w, u.Message(false, "Error decoding request body"))
+// 		return
+// 	}
 
-	if err != nil {
-		fmt.Println(err)
-		u.Respond(w, u.Message(false, "Error decoding request body"))
-		return
-	}
+// 	resp, error := savings.TopUpSave(id)
 
-	resp, error := savings.TopUpSave(uint(id))
+// 	if error == true {
+// 		standardLogger.InvalidRequest("Invalid Request to Top up saving")
+// 		w.WriteHeader(http.StatusBadRequest)
+// 		u.Respond(w, resp)
+// 		return
+// 	}
 
-	if error == true {
-		standardLogger.InvalidRequest("Invalid Request to Top up saving")
-		w.WriteHeader(http.StatusBadRequest)
-		u.Respond(w, resp)
-		return
-	}
-
-	u.Respond(w, resp)
-}
+// 	u.Respond(w, resp)
+// }
