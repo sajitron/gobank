@@ -33,7 +33,7 @@ func init() {
 		fmt.Print(err)
 	}
 
-	db.Debug().AutoMigrate(&Account{}, &SavingsPlan{}, &Savings{}) //* db migration
+	db.Debug().AutoMigrate(&Account{}, &SavingsPlan{}, &Savings{}, &Transaction{}) //* db migration
 }
 
 //* Base contains common columns for all tables
