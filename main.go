@@ -28,7 +28,7 @@ func main() {
 
 	router.HandleFunc("/api/save", controllers.CreateSaving).Methods("POST")
 
-	router.HandleFunc("/api/topup/{savings_id}", controllers.TopUpSavings).Methods("PUT")
+	router.HandleFunc("/api/topup/{savings_id}", controllers.TopUpSavings).Methods("POST")
 
 	router.HandleFunc("/api/save/{id}", controllers.GetSaving).Methods("GET")
 
