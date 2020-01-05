@@ -53,29 +53,3 @@ var GetAllSavings = func(w http.ResponseWriter, r *http.Request) {
 	resp["data"] = data
 	u.Respond(w, resp)
 }
-
-// var TopUpSavings = func(w http.ResponseWriter, r *http.Request) {
-// 	params := mux.Vars(r)
-// 	id := params["savings_id"]
-
-// 	savings := &models.Savings{}
-
-// 	err := json.NewDecoder(r.Body).Decode(savings)
-
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		u.Respond(w, u.Message(false, "Error decoding request body"))
-// 		return
-// 	}
-
-// 	resp, error := savings.TopUpSave(id)
-
-// 	if error == true {
-// 		standardLogger.InvalidRequest("Invalid Request to Top up saving")
-// 		w.WriteHeader(http.StatusBadRequest)
-// 		u.Respond(w, resp)
-// 		return
-// 	}
-
-// 	u.Respond(w, resp)
-// }

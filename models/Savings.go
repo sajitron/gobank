@@ -89,8 +89,6 @@ func (savings *Savings) TopUpSave(savings_id string, amount int) (map[string]int
 
 	GetDB().Table("savings").Update("account_balance", gorm.Expr("account_balance + ?", amount)).Where("id = ?", savings_id)
 
-	// err = GetDB().Table("savings").Where("id = ?", savings_id).Updates(Savings{AccountBalance: gorm.Expr("account_balance + ?", amount)}).Error
-
 	if err != nil {
 		fmt.Println(err)
 		//* add logger
