@@ -2,13 +2,16 @@ package email
 
 import (
 	"bytes"
-	"os"
 	"fmt"
 	"github.com/joho/godotenv"
+	"github.com/sajicode/gobank/logger"
 	"net/smtp"
+	"os"
 	"strconv"
 	"text/template"
 )
+
+var standardLogger = logger.NewLogger()
 
 type EmailMessage struct {
 	From, Subject, Body string
@@ -37,6 +40,7 @@ func init() {
 	e := godotenv.Load()
 	if e != nil {
 		fmt.Print(e)
+		standardLogger.InvalidRequest(e.Error())
 	}
 
 }

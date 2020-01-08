@@ -9,8 +9,12 @@ import (
 	// _ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/sajicode/gobank/logger"
 	uuid "github.com/satori/go.uuid"
 )
+
+//* logger
+var standardLogger = logger.NewLogger()
 
 var db *gorm.DB
 
@@ -18,6 +22,7 @@ func init() {
 	e := godotenv.Load() //* load .env file
 	if e != nil {
 		fmt.Print(e)
+		standardLogger.InvalidRequest(e.Error())
 	}
 
 	username := os.Getenv("db_user")
@@ -31,6 +36,8 @@ func init() {
 	db, err = gorm.Open("postgres", dbUri)
 	if err != nil {
 		fmt.Print(err)
+		standardLogger.InvalidRequest(err.Error())
+
 	}
 
 	db.Debug().AutoMigrate(&Account{}, &SavingsPlan{}, &Savings{}, &Transaction{}) //* db migration

@@ -46,6 +46,7 @@ func GetSaving(id string) *Savings {
 	err := GetDB().Table("savings").Where("id = ?", id).First(savings).Error
 
 	if err != nil {
+		standardLogger.InvalidRequest(err.Error())
 		fmt.Printf("model error: %v", err)
 		return nil
 	}
@@ -58,6 +59,7 @@ func GetSavings(account string) []*Savings {
 	err := GetDB().Table("savings").Joins("inner join savings_plans on savings_plans.id = savings.savings_plan_id").Where("account_id = ?", account).Find(&savings).Error
 
 	if err != nil {
+		standardLogger.InvalidRequest(err.Error())
 		fmt.Println(err)
 		return nil
 	}
@@ -80,7 +82,7 @@ func (savings *Savings) TopUpSave(savings_id string, amount int) (map[string]int
 
 	if err != nil {
 		fmt.Println(err)
-		//* add logger
+		standardLogger.InvalidRequest(err.Error.Error())
 		resp := u.Message(false, "Database Error")
 		return resp, true
 	}
@@ -91,7 +93,7 @@ func (savings *Savings) TopUpSave(savings_id string, amount int) (map[string]int
 
 	if err != nil {
 		fmt.Println(err)
-		//* add logger
+		standardLogger.InvalidRequest(err.Error.Error())
 		resp := u.Message(false, "Database Error")
 		return resp, true
 	}

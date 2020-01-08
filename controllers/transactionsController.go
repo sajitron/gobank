@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -21,7 +20,7 @@ var TopUpSavings = func(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(transaction)
 
 	if err != nil {
-		fmt.Println(err)
+		standardLogger.InvalidRequest(err.Error())
 		u.Respond(w, u.Message(false, "Error decoding request body"))
 		return
 	}

@@ -58,6 +58,7 @@ func GetAllSavingsPlans() []*SavingsPlan {
 
 	if err != nil {
 		fmt.Println(err)
+		standardLogger.InvalidRequest(err.Error())
 		return nil
 	}
 
