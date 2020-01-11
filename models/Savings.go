@@ -69,7 +69,15 @@ func GetSavings(account string) []*Savings {
 
 func (savings *Savings) TopUpSave(savings_id string, amount int) (map[string]interface{}, bool) {
 
-	if resp, ok := savings.Validate(); !ok {
+	if savings_id == "" {
+		standardLogger.InvalidRequest("No savings selected")
+		resp := u.Message(false, "Incomplete request. No savings selected")
+		return resp, true
+	}
+
+	if amount <= 0 {
+		standardLogger.InvalidRequest("Invalid amount")
+		resp := u.Message(false, "Incomplete request. Enter a valid amount")
 		return resp, true
 	}
 
@@ -78,22 +86,18 @@ func (savings *Savings) TopUpSave(savings_id string, amount int) (map[string]int
 		SavingsId: savings_id,
 		Amount:    amount,
 	}
-	err := GetDB().Create(transaction)
 
-	if err != nil {
-		fmt.Println(err)
-		standardLogger.InvalidRequest(err.Error.Error())
-		resp := u.Message(false, "Database Error")
-		return resp, true
-	}
+	GetDB().Create(transaction)
 
 	//* update savings balance
 
 	GetDB().Table("savings").Update("account_balance", gorm.Expr("account_balance + ?", amount)).Where("id = ?", savings_id)
 
+	var err error
+
 	if err != nil {
 		fmt.Println(err)
-		standardLogger.InvalidRequest(err.Error.Error())
+		standardLogger.InvalidRequest(err.Error())
 		resp := u.Message(false, "Database Error")
 		return resp, true
 	}
