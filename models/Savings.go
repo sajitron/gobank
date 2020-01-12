@@ -87,23 +87,18 @@ func (savings *Savings) TopUpSave(savings_id string, amount int) (map[string]int
 		Amount:    amount,
 	}
 
-	GetDB().Create(transaction)
+	resp, err := transaction.Create()
+
+	if err == true {
+		standardLogger.InvalidRequest("Invalid Request Body to Save")
+	}
 
 	//* update savings balance
 
 	GetDB().Table("savings").Update("account_balance", gorm.Expr("account_balance + ?", amount)).Where("id = ?", savings_id)
 
-	var err error
-
-	if err != nil {
-		fmt.Println(err)
-		standardLogger.InvalidRequest(err.Error())
-		resp := u.Message(false, "Database Error")
-		return resp, true
-	}
-
-	resp := u.Message(true, "success")
-	resp["savings"] = savings
+	resp = u.Message(true, "success")
+	resp["savings"] = transaction
 	return resp, false
 
 }
