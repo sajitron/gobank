@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"os"
 	"strings"
 
@@ -88,7 +89,9 @@ func (account *Account) Create() (map[string]interface{}, bool) {
 	response := u.Message(true, "Account has been created")
 	response["account"] = account
 
-	email.Mailer([]string{account.Email}, "Sign up successful", "Welcome to the Go Bank. Let's make that mullah")
+	messageBody := fmt.Sprintf("Welcome to the Go Bank %v. Let's make that mullah", account.FirstName)
+
+	email.Mailer([]string{account.Email}, "Sign up successful", messageBody)
 
 	return response, false
 }
