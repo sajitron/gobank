@@ -1,8 +1,6 @@
 package models
 
 import (
-	"fmt"
-
 	"github.com/jinzhu/gorm"
 	u "github.com/sajicode/gobank/utils"
 )
@@ -39,7 +37,7 @@ func (savings *Savings) Create() (map[string]interface{}, bool) {
 	return resp, false
 }
 
-func GetSaving(id string) *Savings {
+func GetSaving(id string) (*Savings, bool) {
 	savings := &Savings{}
 
 	//* add logger
@@ -47,24 +45,22 @@ func GetSaving(id string) *Savings {
 
 	if err != nil {
 		standardLogger.InvalidRequest(err.Error())
-		fmt.Printf("model error: %v", err)
-		return nil
+		return nil, true
 	}
 
-	return savings
+	return savings, false
 }
 
-func GetSavings(account string) []*Savings {
+func GetSavings(account string) ([]*Savings, bool) {
 	savings := make([]*Savings, 0)
-	err := GetDB().Table("savings").Joins("inner join savings_plans on savings_plans.id = savings.savings_plan_id").Where("account_id = ?", account).Find(&savings).Error
+	err := GetDB().Table("savings").Where("account_id = ?", account).Find(&savings).Error
 
 	if err != nil {
 		standardLogger.InvalidRequest(err.Error())
-		fmt.Println(err)
-		return nil
+		return nil, true
 	}
 
-	return savings
+	return savings, false
 }
 
 func (savings *Savings) TopUpSave(savings_id string, amount int) (map[string]interface{}, bool) {

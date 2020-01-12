@@ -38,17 +38,36 @@ var CreateSaving = func(w http.ResponseWriter, r *http.Request) {
 var GetSaving = func(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
-	data := models.GetSaving(id)
+	data, err := models.GetSaving(id)
+
+	if err == true {
+		standardLogger.InvalidRequest("Invalid Request to get savings")
+		w.WriteHeader(http.StatusBadRequest)
+		resp := u.Message(false, "Error getting savings")
+		u.Respond(w, resp)
+		return
+	}
+
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)
 }
 
+//* get all of a users savings
 var GetAllSavings = func(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["user_id"]
 
-	data := models.GetSavings(id)
+	data, err := models.GetSavings(id)
+
+	if err == true {
+		standardLogger.InvalidRequest("Invalid Request to get savings")
+		w.WriteHeader(http.StatusBadRequest)
+		resp := u.Message(false, "Error getting savings")
+		u.Respond(w, resp)
+		return
+	}
+
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)
