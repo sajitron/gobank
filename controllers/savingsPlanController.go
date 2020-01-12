@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/sajicode/gobank/models"
@@ -33,20 +32,34 @@ var CreateSavingsPlan = func(w http.ResponseWriter, r *http.Request) {
 
 var GetSavingsPlan = func(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["id"])
+	id := params["id"]
 
-	if err != nil {
-		u.Respond(w, u.Message(false, "Request error"))
+	data, err := models.GetSavingsPlan(id)
+
+	if err == true {
+		standardLogger.InvalidRequest("Invalid Request to get savings plan")
+		w.WriteHeader(http.StatusBadRequest)
+		resp := u.Message(false, "Error getting savings plan")
+		u.Respond(w, resp)
 		return
 	}
-	data := models.GetSavingsPlan(id)
+
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)
 }
 
 var GetAllSavingsPlans = func(w http.ResponseWriter, r *http.Request) {
-	data := models.GetAllSavingsPlans()
+	data, err := models.GetAllSavingsPlans()
+
+	if err == true {
+		standardLogger.InvalidRequest("Invalid Request to get savings plans")
+		w.WriteHeader(http.StatusBadRequest)
+		resp := u.Message(false, "Error getting savings plans")
+		u.Respond(w, resp)
+		return
+	}
+
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)

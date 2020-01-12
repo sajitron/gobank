@@ -1,8 +1,6 @@
 package models
 
 import (
-	"fmt"
-
 	u "github.com/sajicode/gobank/utils"
 )
 
@@ -41,26 +39,26 @@ func (savingsPlan *SavingsPlan) Create() (map[string]interface{}, bool) {
 	return resp, false
 }
 
-func GetSavingsPlan(id int) *SavingsPlan {
+func GetSavingsPlan(id string) (*SavingsPlan, bool) {
 	savingsPlan := &SavingsPlan{}
 	err := GetDB().Table("savings_plans").Where("id = ?", id).First(savingsPlan).Error
 
 	if err != nil {
-		return nil
+		standardLogger.InvalidRequest(err.Error())
+		return nil, true
 	}
 
-	return savingsPlan
+	return savingsPlan, false
 }
 
-func GetAllSavingsPlans() []*SavingsPlan {
+func GetAllSavingsPlans() ([]*SavingsPlan, bool) {
 	savingsPlans := make([]*SavingsPlan, 0)
 	err := GetDB().Table("savings_plans").Find(&savingsPlans).Error
 
 	if err != nil {
-		fmt.Println(err)
 		standardLogger.InvalidRequest(err.Error())
-		return nil
+		return nil, true
 	}
 
-	return savingsPlans
+	return savingsPlans, false
 }
