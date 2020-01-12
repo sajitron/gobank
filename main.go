@@ -34,6 +34,10 @@ func main() {
 
 	router.HandleFunc("/api/saves/{user_id}", controllers.GetAllSavings).Methods("GET")
 
+	router.HandleFunc("/api/transaction/{id}", controllers.GetTransaction).Methods("GET")
+
+	router.HandleFunc("/api/transactions/{savings_id}", controllers.GetTransactions).Methods("GET")
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8000"
