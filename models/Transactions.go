@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	u "github.com/sajicode/gobank/utils"
 )
 
@@ -35,29 +34,29 @@ func (transaction *Transaction) Create() (map[string]interface{}, bool) {
 	return resp, false
 }
 
-func GetTransaction(id string) *Transaction {
+func GetTransaction(id string) (*Transaction, bool) {
 	transaction := &Transaction{}
 
 	//* add logger
-	err := GetDB().Table("transaction").Where("id = ?", id).First(transaction).Error
+	err := GetDB().Table("transactions").Where("id = ?", id).First(transaction).Error
 
 	if err != nil {
-		fmt.Printf("model error: %v", err)
-		return nil
+		standardLogger.InvalidRequest(err.Error())
+		return nil, true
 	}
 
-	return transaction
+	return transaction, false
 }
 
-func GetTransactions(savings_id string) []*Transaction {
+func GetTransactions(savings_id string) ([]*Transaction, bool) {
 	transaction := make([]*Transaction, 0)
-	err := GetDB().Table("transaction").Joins("inner join savings_plans on savings_plans.id = savings.savings_plan_id").Where("savings_id = ?", savings_id).Find(&transaction).Error
+	err := GetDB().Table("transactions").Where("savings_id = ?", savings_id).Find(&transaction).Error
 
 	//* add logger
 	if err != nil {
-		fmt.Println(err)
-		return nil
+		standardLogger.InvalidRequest(err.Error())
+		return nil, true
 	}
 
-	return transaction
+	return transaction, false
 }
