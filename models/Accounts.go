@@ -88,7 +88,7 @@ func (account *Account) Create() (map[string]interface{}, bool) {
 	response := u.Message(true, "Account has been created")
 	response["account"] = account
 
-	email.Mailer([]string{account.Email})
+	email.Mailer([]string{account.Email}, "Sign up successful", "Welcome to the Go Bank. Let's make that mullah")
 
 	return response, false
 }

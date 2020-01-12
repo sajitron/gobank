@@ -45,7 +45,7 @@ func init() {
 
 }
 
-func Mailer(recipients []string) {
+func Mailer(recipients []string, subject string, messageBody string) {
 	emailUsername := os.Getenv("email_user")
 	emailPassword := os.Getenv("email_password")
 	emailServer := os.Getenv("email_server")
@@ -54,8 +54,8 @@ func Mailer(recipients []string) {
 	message := &EmailMessage{
 		From:    "sajioloye@gmail.com",
 		To:      recipients,
-		Subject: "Sign up successful",
-		Body:    "Welcome to the Go Bank. Let's grow together.",
+		Subject: subject,
+		Body:    messageBody,
 	}
 
 	//* populate a buffer with the rendered message text from the template
